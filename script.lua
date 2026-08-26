@@ -185,8 +185,8 @@ AimTab:CreateToggle({Name = "Show FOV", CurrentValue = false, Callback = functio
 AimTab:CreateSlider({Name = "FOV Size", Range = {50, 800}, Increment = 10, CurrentValue = 150, Callback = function(v) Config.FOVRadius = v end})
 
 -- เพิ่ม Slider สำหรับปรับตำแหน่งวง FOV ให้ตรงกับเมาส์
-AimTab:CreateSlider({Name = "ปรับตำแหน่งวง X (ซ้าย-ขวา)", Range = {-200, 200}, Increment = 1, CurrentValue = 0, Callback = function(v) Config.OffsetX = v end})
-AimTab:CreateSlider({Name = "ปรับตำแหน่งวง Y (บน-ล่าง)", Range = {-200, 200}, Increment = 1, CurrentValue = 0, Callback = function(v) Config.OffsetY = v end})
+AimTab:CreateSlider({Name = "ปรับตำแหน่งวง X (ซ้าย-ขวา)", Range = {-500, 500}, Increment = 1, CurrentValue = 0, Callback = function(v) Config.OffsetX = v end})
+AimTab:CreateSlider({Name = "ปรับตำแหน่งวง Y (บน-ล่าง)", Range = {-500, 500}, Increment = 1, CurrentValue = 0, Callback = function(v) Config.OffsetY = v end})
 
 AimTab:CreateToggle({Name = "Enable Silent Aim", CurrentValue = false, Callback = function(v) Config.SilentAimEnabled = v end})
 
