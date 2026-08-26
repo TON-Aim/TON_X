@@ -29,7 +29,6 @@ local Camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
-local GuiService = game:GetService("GuiService")
 
 local Config = {
     SilentAimEnabled = false, ShowFOV = false, FOVRadius = 150, TargetPart = "HumanoidRootPart", TargetType = "Players",
@@ -43,22 +42,18 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
--- ทำให้วงขยับตามเมาส์ และหักลบขอบบนของ Roblox ออก เพื่อให้วงตรงกับเมาส์เป๊ะๆ
+-- ล็อกวง FOV ไว้ที่กึ่งกลางจอเป๊ะๆ ไม่แยกจากเมาส์
 RunService.RenderStepped:Connect(function()
-    local mouseLocation = UserInputService:GetMouseLocation()
-    local inset = GuiService:GetGuiInset()
-    
-    FOVring.Position = Vector2.new(mouseLocation.X, mouseLocation.Y - inset.Y)
+    local screenCenter = Camera.ViewportSize / 2
+    FOVring.Position = screenCenter
     FOVring.Radius = Config.FOVRadius
     FOVring.Visible = Config.ShowFOV
     FOVring.Color = Config.TargetType == "Players" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 255, 50)
 end)
 
-local function getClosestTargetToCursor()
+local function getClosestTargetToScreenCenter()
     local closestTarget, shortestDistance = nil, Config.FOVRadius
-    local mouseLocation = UserInputService:GetMouseLocation()
-    local inset = GuiService:GetGuiInset()
-    local mousePos = Vector2.new(mouseLocation.X, mouseLocation.Y - inset.Y)
+    local screenCenter = Camera.ViewportSize / 2
     local targetList = {}
     
     if Config.TargetType == "Players" then
@@ -77,7 +72,7 @@ local function getClosestTargetToCursor()
         if char:FindFirstChild(Config.TargetPart) and char:FindFirstChild("Humanoid") and char.Humanoid.Health > 0 then
             local screenPos, onScreen = Camera:WorldToViewportPoint(char[Config.TargetPart].Position)
             if onScreen then
-                local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
                 if distance < shortestDistance then
                     closestTarget = char
                     shortestDistance = distance
@@ -94,7 +89,7 @@ setreadonly(mt, false)
 mt.__index = newcclosure(function(self, key)
     if Config.SilentAimEnabled and not checkcaller() and (key == "Hit" or key == "Target") then
         if typeof(self) == "Instance" and self:IsA("Mouse") then
-            local targetChar = getClosestTargetToCursor()
+            local targetChar = getClosestTargetToScreenCenter()
             if targetChar and targetChar:FindFirstChild(Config.TargetPart) then
                 return key == "Hit" and targetChar[Config.TargetPart].CFrame or targetChar[Config.TargetPart]
             end
@@ -193,6 +188,6 @@ MoveTab:CreateToggle({Name = "Enable Fast Walk", CurrentValue = false, Callback 
 MoveTab:CreateSlider({Name = "Jump Value", Range = {50, 300}, Increment = 10, CurrentValue = 100, Callback = function(v) Config.JumpValue = v end})
 MoveTab:CreateToggle({Name = "Enable High Jump", CurrentValue = false, Callback = function(v) Config.JumpEnabled = v end})
 
-local VisualsTab = Window:CreateTab("Visuals", 4483362458)
+local VisualsTab = Window:Context or Window:CreateTab("Visuals", 4483362458)
 VisualsTab:CreateToggle({Name = "Enable No Fog", CurrentValue = false, Callback = function(v) Config.NoFogEnabled = v end})
 VisualsTab:CreateToggle({Name = "Enable Infinite Zoom", CurrentValue = false, Callback = function(v) Config.ZoomEnabled = v end})
