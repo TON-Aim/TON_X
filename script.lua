@@ -42,9 +42,10 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
+-- ล็อกวง FOV ไว้ที่กึ่งกลางจอเป๊ะๆ (ตัวนี้ลบอันเก่าที่เอียงออกไปแล้วครับ)
 RunService.RenderStepped:Connect(function()
-    local mousePos = UserInputService:GetMouseLocation()
-    FOVring.Position = mousePos
+    local screenCenter = Camera.ViewportSize / 2
+    FOVring.Position = screenCenter
     FOVring.Radius = Config.FOVRadius
     FOVring.Visible = Config.ShowFOV
     FOVring.Color = Config.TargetType == "Players" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 255, 50)
