@@ -42,7 +42,6 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
--- ล็อกวง FOV ไว้ที่กึ่งกลางหน้าจอถาวร เป๊ะและเสถียรที่สุด
 RunService.RenderStepped:Connect(function()
     local screenCenter = Camera.ViewportSize / 2
     FOVring.Position = screenCenter
@@ -174,7 +173,17 @@ end)
 
 local AimTab = Window:CreateTab("Aimbot", 4483362458)
 AimTab:CreateDropdown({Name = "Aim Target", Options = {"Players", "Mobs"}, CurrentOption = {"Players"}, Callback = function(v) Config.TargetType = v[1] end})
-AimTab:CreateToggle({Name = "Show FOV", CurrentValue = false, Callback = function(v) Config.ShowFOV = v end})
+
+-- เพิ่มคำอธิบายตรงปุ่มเปิด-ปิดวง FOV ตามที่คุณ ton ต้องการครับ
+AimTab:CreateToggle({
+    Name = "Show FOV", 
+    Info = "ความกว้างในการ aim ไม่จำเป็นต้องเปิดไว้ตลอดเวลา",
+    CurrentValue = false, 
+    Callback = function(v) 
+        Config.ShowFOV = v 
+    end
+})
+
 AimTab:CreateSlider({Name = "FOV Size", Range = {50, 800}, Increment = 10, CurrentValue = 150, Callback = function(v) Config.FOVRadius = v end})
 AimTab:CreateToggle({Name = "Enable Silent Aim", CurrentValue = false, Callback = function(v) Config.SilentAimEnabled = v end})
 
