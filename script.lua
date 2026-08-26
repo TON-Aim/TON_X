@@ -33,7 +33,6 @@ local GuiService = game:GetService("GuiService")
 
 local Config = {
     SilentAimEnabled = false, ShowFOV = false, FOVRadius = 150, TargetPart = "HumanoidRootPart", TargetType = "Players",
-    OffsetX = 0, OffsetY = 0, -- เพิ่มการตั้งค่า Offset X และ Y
     NoFogEnabled = false, ZoomEnabled = false,
     ESPTextEnabled = false, ESPChamsEnabled = false,
     SpeedEnabled = false, SpeedValue = 50,
@@ -44,12 +43,12 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
+-- ทำให้วงขยับตามเมาส์ และหักลบขอบบนของ Roblox ออก เพื่อให้วงตรงกับเมาส์เป๊ะๆ
 RunService.RenderStepped:Connect(function()
-    local mousePos = UserInputService:GetMouseLocation()
-    local guiInset = GuiService:GetGuiInset()
+    local mouseLocation = UserInputService:GetMouseLocation()
+    local inset = GuiService:GetGuiInset()
     
-    -- วาดวง FOV โดยบวกค่า Offset X และ Y ที่เราตั้งในเมนูเข้าไป
-    FOVring.Position = Vector2.new(mousePos.X + Config.OffsetX, mousePos.Y - guiInset.Y + Config.OffsetY)
+    FOVring.Position = Vector2.new(mouseLocation.X, mouseLocation.Y - inset.Y)
     FOVring.Radius = Config.FOVRadius
     FOVring.Visible = Config.ShowFOV
     FOVring.Color = Config.TargetType == "Players" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 255, 50)
@@ -57,10 +56,9 @@ end)
 
 local function getClosestTargetToCursor()
     local closestTarget, shortestDistance = nil, Config.FOVRadius
-    local mousePos = UserInputService:GetMouseLocation()
-    local guiInset = GuiService:GetGuiInset()
-    -- คำนวณจุดศูนย์กลางของวง FOV ที่รวมค่า Offset แล้ว เพื่อให้ Aimbot เล็งตรงกับวงที่ตาเห็นเป๊ะๆ
-    local fovCenter = Vector2.new(mousePos.X + Config.OffsetX, mousePos.Y - guiInset.Y + Config.OffsetY)
+    local mouseLocation = UserInputService:GetMouseLocation()
+    local inset = GuiService:GetGuiInset()
+    local mousePos = Vector2.new(mouseLocation.X, mouseLocation.Y - inset.Y)
     local targetList = {}
     
     if Config.TargetType == "Players" then
@@ -79,7 +77,7 @@ local function getClosestTargetToCursor()
         if char:FindFirstChild(Config.TargetPart) and char:FindFirstChild("Humanoid") and char.Humanoid.Health > 0 then
             local screenPos, onScreen = Camera:WorldToViewportPoint(char[Config.TargetPart].Position)
             if onScreen then
-                local distance = (Vector2.new(screenPos.X, screenPos.Y) - fovCenter).Magnitude
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
                 if distance < shortestDistance then
                     closestTarget = char
                     shortestDistance = distance
@@ -183,11 +181,6 @@ local AimTab = Window:CreateTab("Aimbot", 4483362458)
 AimTab:CreateDropdown({Name = "Aim Target", Options = {"Players", "Mobs"}, CurrentOption = {"Players"}, Callback = function(v) Config.TargetType = v[1] end})
 AimTab:CreateToggle({Name = "Show FOV", CurrentValue = false, Callback = function(v) Config.ShowFOV = v end})
 AimTab:CreateSlider({Name = "FOV Size", Range = {50, 800}, Increment = 10, CurrentValue = 150, Callback = function(v) Config.FOVRadius = v end})
-
--- เพิ่ม Slider สำหรับปรับตำแหน่งวง FOV ให้ตรงกับเมาส์
-AimTab:CreateSlider({Name = "ปรับตำแหน่งวง X (ซ้าย-ขวา)", Range = {-500, 500}, Increment = 1, CurrentValue = 0, Callback = function(v) Config.OffsetX = v end})
-AimTab:CreateSlider({Name = "ปรับตำแหน่งวง Y (บน-ล่าง)", Range = {-500, 500}, Increment = 1, CurrentValue = 0, Callback = function(v) Config.OffsetY = v end})
-
 AimTab:CreateToggle({Name = "Enable Silent Aim", CurrentValue = false, Callback = function(v) Config.SilentAimEnabled = v end})
 
 local ESPTab = Window:CreateTab("ESP System", 4483362458)
