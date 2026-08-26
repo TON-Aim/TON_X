@@ -29,6 +29,7 @@ local Camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Lighting = game:GetService("Lighting")
+local GuiService = game:GetService("GuiService") -- เพิ่ม GuiService เพื่อแก้ปัญหาเมาส์เบี้ยว
 
 local Config = {
     SilentAimEnabled = false, ShowFOV = false, FOVRadius = 150, TargetPart = "HumanoidRootPart", TargetType = "Players",
@@ -42,10 +43,12 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
--- ล็อกวง FOV ไว้ที่กึ่งกลางจอเป๊ะๆ (ตัวนี้ลบอันเก่าที่เอียงออกไปแล้วครับ)
+-- แก้ไขให้วงขยับตามเมาส์ และลบระยะ Top Bar ออก เพื่อให้ตรงกึ่งกลางเมาส์เป๊ะๆ
 RunService.RenderStepped:Connect(function()
-    local screenCenter = Camera.ViewportSize / 2
-    FOVring.Position = screenCenter
+    local mousePos = UserInputService:GetMouseLocation()
+    local guiInset = GuiService:GetGuiInset()
+    
+    FOVring.Position = Vector2.new(mousePos.X, mousePos.Y - guiInset.Y)
     FOVring.Radius = Config.FOVRadius
     FOVring.Visible = Config.ShowFOV
     FOVring.Color = Config.TargetType == "Players" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 255, 50)
