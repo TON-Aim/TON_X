@@ -174,15 +174,10 @@ end)
 local AimTab = Window:CreateTab("Aimbot", 4483362458)
 AimTab:CreateDropdown({Name = "Aim Target", Options = {"Players", "Mobs"}, CurrentOption = {"Players"}, Callback = function(v) Config.TargetType = v[1] end})
 
--- เปลี่ยนข้อความคำอธิบายเป็นภาษาอังกฤษเรียบร้อยครับ
-AimTab:CreateToggle({
-    Name = "Show FOV", 
-    Info = "Aim FOV size, does not need to be kept open all the time.",
-    CurrentValue = false, 
-    Callback = function(v) 
-        Config.ShowFOV = v 
-    end
-})
+AimTab:CreateToggle({Name = "Show FOV", CurrentValue = false, Callback = function(v) Config.ShowFOV = v end})
+
+-- เพิ่มกล่องข้อความอธิบาย (Paragraph) ไว้ตรงนี้ รับรองว่าขึ้นโชว์ในเกมแน่นอนครับ
+AimTab:CreateParagraph({Title = "FOV Note", Content = "Aim FOV size, does not need to be kept open all the time."})
 
 AimTab:CreateSlider({Name = "FOV Size", Range = {50, 800}, Increment = 10, CurrentValue = 150, Callback = function(v) Config.FOVRadius = v end})
 AimTab:CreateToggle({Name = "Enable Silent Aim", CurrentValue = false, Callback = function(v) Config.SilentAimEnabled = v end})
