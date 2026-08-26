@@ -174,10 +174,10 @@ end)
 local AimTab = Window:CreateTab("Aimbot", 4483362458)
 AimTab:CreateDropdown({Name = "Aim Target", Options = {"Players", "Mobs"}, CurrentOption = {"Players"}, Callback = function(v) Config.TargetType = v[1] end})
 
--- เพิ่มคำอธิบายตรงปุ่มเปิด-ปิดวง FOV ตามที่คุณ ton ต้องการครับ
+-- เปลี่ยนข้อความคำอธิบายเป็นภาษาอังกฤษเรียบร้อยครับ
 AimTab:CreateToggle({
     Name = "Show FOV", 
-    Info = "ความกว้างในการ aim ไม่จำเป็นต้องเปิดไว้ตลอดเวลา",
+    Info = "Aim FOV size, does not need to be kept open all the time.",
     CurrentValue = false, 
     Callback = function(v) 
         Config.ShowFOV = v 
@@ -188,8 +188,8 @@ AimTab:CreateSlider({Name = "FOV Size", Range = {50, 800}, Increment = 10, Curre
 AimTab:CreateToggle({Name = "Enable Silent Aim", CurrentValue = false, Callback = function(v) Config.SilentAimEnabled = v end})
 
 local ESPTab = Window:CreateTab("ESP System", 4483362458)
-ESPTab:CreateToggle({Name = "ESP Text (แสดงชื่อ เลือด ระยะ)", CurrentValue = false, Callback = function(v) Config.ESPTextEnabled = v end})
-ESPTab:CreateToggle({Name = "ESP Chams (ไฮไลท์ตัวสีๆ มองทะลุกำแพง)", CurrentValue = false, Callback = function(v) Config.ESPChamsEnabled = v end})
+ESPTab:CreateToggle({Name = "ESP Text (Name, HP, Distance)", CurrentValue = false, Callback = function(v) Config.ESPTextEnabled = v end})
+ESPTab:CreateToggle({Name = "ESP Chams (Wallhack Highlight)", CurrentValue = false, Callback = function(v) Config.ESPChamsEnabled = v end})
 
 local MoveTab = Window:CreateTab("Movement", 4483362458)
 MoveTab:CreateSlider({Name = "Speed Value", Range = {16, 250}, Increment = 5, CurrentValue = 50, Callback = function(v) Config.SpeedValue = v end})
