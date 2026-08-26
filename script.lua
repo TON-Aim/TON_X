@@ -42,7 +42,7 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
--- ล็อกวง FOV ไว้ที่กึ่งกลางจอเป๊ะๆ ไม่แยกจากเมาส์
+-- ล็อกวง FOV ไว้ที่กึ่งกลางหน้าจอถาวร เป๊ะและเสถียรที่สุด
 RunService.RenderStepped:Connect(function()
     local screenCenter = Camera.ViewportSize / 2
     FOVring.Position = screenCenter
@@ -188,6 +188,6 @@ MoveTab:CreateToggle({Name = "Enable Fast Walk", CurrentValue = false, Callback 
 MoveTab:CreateSlider({Name = "Jump Value", Range = {50, 300}, Increment = 10, CurrentValue = 100, Callback = function(v) Config.JumpValue = v end})
 MoveTab:CreateToggle({Name = "Enable High Jump", CurrentValue = false, Callback = function(v) Config.JumpEnabled = v end})
 
-local VisualsTab = Window:Context or Window:CreateTab("Visuals", 4483362458)
+local VisualsTab = Window:CreateTab("Visuals", 4483362458)
 VisualsTab:CreateToggle({Name = "Enable No Fog", CurrentValue = false, Callback = function(v) Config.NoFogEnabled = v end})
 VisualsTab:CreateToggle({Name = "Enable Infinite Zoom", CurrentValue = false, Callback = function(v) Config.ZoomEnabled = v end})
