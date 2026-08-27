@@ -27,6 +27,7 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "TonCustomUI"
 ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true -- แก้บัคพิกัดเพี้ยนเวลาตั้งจอ 125% และแก้ UI ไหล
 
 -- สีหลักของ UI
 local Colors = {
@@ -83,8 +84,8 @@ tStroke.Thickness = 2
 MakeDraggable(ToggleBtn)
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 500, 0, 280)
-MainFrame.Position = UDim2.new(0.5, -250, 0.5, -140)
+MainFrame.Size = UDim2.new(0, 600, 0, 380) -- ขยายขนาด UI ให้กว้างและใหญ่ขึ้น
+MainFrame.Position = UDim2.new(0.5, -300, 0.5, -190)
 MainFrame.BackgroundColor3 = Colors.MainBg
 MainFrame.Active = true
 MainFrame.Parent = ScreenGui
@@ -292,9 +293,10 @@ local FOVring = Drawing.new("Circle")
 FOVring.Thickness = 1.5
 FOVring.Filled = false
 
-local function getClosestTargetToScreenCenter()
+local function getClosestTargetToMouse()
     local closestTarget, shortestDistance = nil, Config.FOVRadius
-    local screenCenter = Camera.ViewportSize / 2
+    -- ดึงพิกัดจากเมาส์โดยตรงแทนจุดกึ่งกลางจอ
+    local mousePos = UserInputService:GetMouseLocation()
     local targetList = {}
     
     if Config.TargetType == "Players" then
@@ -313,7 +315,8 @@ local function getClosestTargetToScreenCenter()
         if char:FindFirstChild(Config.TargetPart) and char:FindFirstChild("Humanoid") and char.Humanoid.Health > 0 then
             local screenPos, onScreen = Camera:WorldToViewportPoint(char[Config.TargetPart].Position)
             if onScreen then
-                local distance = (Vector2.new(screenPos.X, screenPos.Y) - screenCenter).Magnitude
+                -- คำนวณระยะห่างระหว่างเป้าหมายกับเมาส์แทนจอ
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
                 if distance < shortestDistance then
                     closestTarget = char
                     shortestDistance = distance
@@ -331,7 +334,7 @@ setreadonly(mt, false)
 mt.__index = newcclosure(function(self, key)
     if Config.SilentAimEnabled and not checkcaller() and (key == "Hit" or key == "Target") then
         if typeof(self) == "Instance" and self:IsA("Mouse") then
-            local targetChar = getClosestTargetToScreenCenter()
+            local targetChar = getClosestTargetToMouse()
             if targetChar and targetChar:FindFirstChild(Config.TargetPart) then
                 return key == "Hit" and targetChar[Config.TargetPart].CFrame or targetChar[Config.TargetPart]
             end
@@ -344,8 +347,8 @@ setreadonly(mt, true)
 -- Loop การทำงานหลัก
 RunService.RenderStepped:Connect(function()
     -- FOV
-    local screenCenter = Camera.ViewportSize / 2
-    FOVring.Position = screenCenter
+    local mousePos = UserInputService:GetMouseLocation()
+    FOVring.Position = mousePos -- วงกลมล็อกตามพิกัดเมาส์ 100%
     FOVring.Radius = Config.FOVRadius
     FOVring.Visible = Config.ShowFOV
     FOVring.Color = Config.TargetType == "Players" and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(50, 255, 50)
