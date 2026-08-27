@@ -84,7 +84,7 @@ tStroke.Thickness = 2
 MakeDraggable(ToggleBtn)
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 600, 0, 380) -- ขยายขนาด UI ให้กว้างและใหญ่ขึ้น
+MainFrame.Size = UDim2.new(0, 600, 0, 380)
 MainFrame.Position = UDim2.new(0.5, -300, 0.5, -190)
 MainFrame.BackgroundColor3 = Colors.MainBg
 MainFrame.Active = true
@@ -185,15 +185,16 @@ local function CreateToggle(parent, text, default, callback)
     end)
 end
 
+-- 🔴 แก้ไขตรงนี้: ปรับ Slider ให้หลอดอ้วนขึ้น กดยากน้อยลง 🔴
 local function CreateSlider(parent, text, min, max, default, callback)
     local SliderFrame = Instance.new("Frame")
-    SliderFrame.Size = UDim2.new(1, 0, 0, 40)
+    SliderFrame.Size = UDim2.new(1, 0, 0, 48) -- ขยายกรอบให้สูงขึ้นรับกับหลอดที่อ้วนขึ้น
     SliderFrame.BackgroundColor3 = Colors.ElementBg
     SliderFrame.Parent = parent
     Instance.new("UICorner", SliderFrame).CornerRadius = UDim.new(0, 6)
     
     local Label = Instance.new("TextLabel")
-    Label.Size = UDim2.new(1, -10, 0.5, 0)
+    Label.Size = UDim2.new(1, -10, 0.4, 0)
     Label.Position = UDim2.new(0, 5, 0, 2)
     Label.BackgroundTransparency = 1
     Label.Text = text .. ": " .. default
@@ -204,8 +205,8 @@ local function CreateSlider(parent, text, min, max, default, callback)
     Label.Parent = SliderFrame
     
     local BarBg = Instance.new("Frame")
-    BarBg.Size = UDim2.new(1, -20, 0, 6)
-    BarBg.Position = UDim2.new(0, 10, 0.7, 0)
+    BarBg.Size = UDim2.new(1, -20, 0, 14) -- ปรับหลอดให้อ้วนขึ้น (จาก 6 เป็น 14)
+    BarBg.Position = UDim2.new(0, 10, 0.55, 0) -- จัดให้อยู่ตรงกลางพอดี
     BarBg.BackgroundColor3 = Color3.fromRGB(100, 150, 200)
     BarBg.Parent = SliderFrame
     Instance.new("UICorner", BarBg).CornerRadius = UDim.new(1, 0)
